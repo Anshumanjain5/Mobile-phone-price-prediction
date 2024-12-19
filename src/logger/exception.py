@@ -1,5 +1,4 @@
 import sys
-from logger import logging
 
 def get_custom_error(error, error_info: sys):
     _, _, exb = error_info.exc_info()
@@ -9,7 +8,6 @@ def get_custom_error(error, error_info: sys):
         f"Error occurred in Python script: {file_name}. "
         f"Line number: {line_no}, Error message: {str(error)}"
     )
-    logging.error(error_message)
     return error_message
 
 class CustomError(Exception):
