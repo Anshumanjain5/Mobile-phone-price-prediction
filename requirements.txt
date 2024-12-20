@@ -1,3 +1,7 @@
 scikit-learn
 pandas
 numpy
+flask
+pickle
+xgboost
+catboost

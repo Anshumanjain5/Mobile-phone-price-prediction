@@ -31,5 +31,4 @@ def create_init(path):
     except Exception as e:
         print(f"Error occurred while processing {path}: {e}")
 
-# Starting the process from the current working directory
 create_init(os.getcwd())

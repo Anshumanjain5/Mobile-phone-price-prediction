@@ -1,7 +1,5 @@
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
-import pandas as pd
-import numpy as np
 from dataclasses import dataclass
 import sys
 import os
@@ -30,7 +28,8 @@ class DataTransformation:
         Ingests the training and testing data.
         """
         logging.info("Initializing Data Transformation...")
-        self.train, self.test = DataIngestion().ingest_data()
+        data_ingestion = DataIngestion()
+        self.x_train,self.x_test,self.y_train,self.y_test = data_ingestion.ingest_data("price_range")
 
     def get_preprocessor(self):
         """
@@ -50,17 +49,13 @@ class DataTransformation:
         Saves the preprocessor and returns the transformed datasets.
         """
         try:
-            target_column = "price_range"
             logging.info("Starting data transformation process...")
 
             # Initialize and prepare the preprocessor
             preprocessor = self.get_preprocessor()
-            logging.info(f"Dropping target column '{target_column}' from datasets...")
-            self.train_ = self.train.drop(target_column, axis=1)
-            self.test_ = self.test.drop(target_column, axis=1)
 
             logging.info("Fitting the preprocessor on training data...")
-            preprocessor.fit(self.train_)
+            preprocessor.fit(self.x_train)
             logging.info("Preprocessor fitted successfully.")
 
             # Save the preprocessor object
@@ -69,18 +64,13 @@ class DataTransformation:
 
             # Transform train and test datasets
             logging.info("Transforming training dataset...")
-            self.train_arr = preprocessor.transform(self.train_)
+            self.train_arr = preprocessor.transform(self.x_train)
 
             logging.info("Transforming testing dataset...")
-            self.test_arr = preprocessor.transform(self.test_)
-
-            # Combine transformed data with the target column
-            logging.info("Combining transformed data with target column...")
-            self.train_set = np.c_[self.train_arr, self.train[target_column]]
-            self.test_set = np.c_[self.test_arr, self.test[target_column]]
+            self.test_arr = preprocessor.transform(self.x_test)
 
             logging.info("Data transformation process completed successfully.")
-            return self.train_set, self.test_set
+            return self.train_arr,self.test_arr,self.y_train,self.y_test
 
         except Exception as e:
             error_msg = CustomError(e, sys)
@@ -92,7 +82,8 @@ if __name__ == '__main__':
     try:
         logging.info("Starting the data transformation script...")
         transformer = DataTransformation()
-        train_set, test_set = transformer.transform_data()
+        x_train_set,x_test_set,y_train_set,y_test_set = transformer.transform_data()
+        # train_df = pd.DataFrame(train_set)
         logging.info("Data transformation script completed successfully.")
     except Exception as e:
         logging.error(f"Script terminated due to an error: {e}")

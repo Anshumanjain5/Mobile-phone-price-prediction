@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Price Predictor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .form-container {
+            background: #ffffff;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            overflow-y: auto;
+            max-height: 90vh;
+            position: relative;
+        }
+
+        .form-container h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #ff6f61;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mb-3 {
+            margin-bottom: 15px;
+        }
+
+        label {
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        input, select {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            width: 100%;
+            background: #f9f9f9;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #ff6f61;
+        }
+
+        .btn {
+            background: #ff6f61;
+            color: #fff;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background: #ff8568;
+        }
+
+        h2 {
+            text-align: center;
+            margin-top: 20px;
+            color: #555;
+        }
+
+        .loading {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(4px);
+            justify-content: center;
+            align-items: center;
+            border-radius: 15px;
+        }
+
+        .loading.active {
+            display: flex;
+        }
+
+        .loading .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(0, 0, 0, 0.1);
+            border-top: 5px solid #ff6f61;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Mobile Price Predictor</h1>
+        <form id="predict-form" action="{{ url_for('predict') }}" method="post">
+            <div class="mb-3">
+                <label>Battery Power (mAh)</label>
+                <input type="number" name="battery_power" placeholder="Enter battery power" required>
+            </div>
+            <div class="mb-3">
+                <label>Bluetooth</label>
+                <select name="blue" required>
+                    <option value="" disabled selected>Select Bluetooth</option>
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label>Clock Speed (GHz)</label>
+                <input type="number" step="0.1" name="clock_speed" placeholder="Enter clock speed" required>
+            </div>
+            <div class="mb-3">
+                <label>Dual SIM</label>
+                <select name="dual_sim" required>
+                    <option value="" disabled selected>Select Dual SIM</option>
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label>Front Camera (MP)</label>
+                <input type="number" name="fc" placeholder="Enter front camera resolution" required>
+            </div>
+            <div class="mb-3">
+                <label>4G Enabled</label>
+                <select name="four_g" required>
+                    <option value="" disabled selected>Select 4G</option>
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label>Internal Memory (GB)</label>
+                <input type="number" name="int_memory" placeholder="Enter internal memory" required>
+            </div>
+            <div class="mb-3">
+                <label>Mobile Depth (cm)</label>
+                <input type="number" step="0.1" name="m_dep" placeholder="Enter mobile depth" required>
+            </div>
+            <div class="mb-3">
+                <label>Mobile Weight (g)</label>
+                <input type="number" name="mobile_wt" placeholder="Enter mobile weight" required>
+            </div>
+            <div class="mb-3">
+                <label>Number of Cores</label>
+                <input type="number" name="n_cores" placeholder="Enter number of cores" required>
+            </div>
+            <div class="mb-3">
+                <label>Primary Camera (MP)</label>
+                <input type="number" name="pc" placeholder="Enter primary camera resolution" required>
+            </div>
+            <div class="mb-3">
+                <label>Pixel Height</label>
+                <input type="number" name="px_height" placeholder="Enter pixel height" required>
+            </div>
+            <div class="mb-3">
+                <label>Pixel Width</label>
+                <input type="number" name="px_width" placeholder="Enter pixel width" required>
+            </div>
+            <div class="mb-3">
+                <label>RAM (MB)</label>
+                <input type="number" name="ram" placeholder="Enter RAM in MB" required>
+            </div>
+            <div class="mb-3">
+                <label>Screen Height (cm)</label>
+                <input type="number" name="sc_h" placeholder="Enter screen height" required>
+            </div>
+            <div class="mb-3">
+                <label>Screen Width (cm)</label>
+                <input type="number" name="sc_w" placeholder="Enter screen width" required>
+            </div>
+            <div class="mb-3">
+                <label>Talk Time (hours)</label>
+                <input type="number" name="talk_time" placeholder="Enter talk time" required>
+            </div>
+            <div class="mb-3">
+                <label>3G Enabled</label>
+                <select name="three_g" required>
+                    <option value="" disabled selected>Select 3G</option>
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label>Touch Screen</label>
+                <select name="touch_screen" required>
+                    <option value="" disabled selected>Select Touch Screen</option>
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label>WiFi</label>
+                <select name="wifi" required>
+                    <option value="" disabled selected>Select WiFi</option>
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <input class="btn" type="submit" value="Predict Price Range">
+            </div>
+        </form>
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+        </div>
+        <h2>The predicted price range is: {{ price_range }}</h2>
+    </div>
+    <script>
+        const form = document.getElementById('predict-form');
+        const loading = document.getElementById('loading');
+
+        form.addEventListener('submit', () => {
+            loading.classList.add('active');
+        });
+    </script>
+</body>
+</html>
