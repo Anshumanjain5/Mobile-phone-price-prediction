@@ -5,7 +5,7 @@ import sys
 from dataclasses import dataclass
 
 # Adding the project directory to the system path
-sys.path.append(r"C:\Users\anshuman\Desktop\Mobile Price Prediction\src")
+sys.path.append(os.path.join(os.getcwd(),"src"))
 
 from logger.logger import logging
 from logger.exception import CustomError

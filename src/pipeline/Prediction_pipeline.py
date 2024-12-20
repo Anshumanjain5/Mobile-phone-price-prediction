@@ -2,7 +2,7 @@ import pandas as pd
 import os 
 import sys
 
-sys.path.append(r"C:\Users\anshuman\Desktop\Mobile Price Prediction\src")
+sys.path.append(os.path.join(os.getcwd(),"src"))
 
 from logger.logger import logging
 from logger.exception import CustomError
