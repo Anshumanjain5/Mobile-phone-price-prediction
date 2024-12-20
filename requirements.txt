@@ -5,3 +5,4 @@ flask
 pickle
 xgboost
 catboost
+-e .

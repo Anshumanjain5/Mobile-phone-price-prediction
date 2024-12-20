@@ -34,10 +34,5 @@ setup(
     long_description=open("README.md", "r").read(),
     long_description_content_type="text/markdown",
     url="https://github.com/anshumanjain8886/PhonePricePrediction",
-    classifiers=[
-        "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: MIT License",
-        "Operating System :: OS Independent",
-    ],
     python_requires='>=3.6',  # Specify the minimum required Python version
 )

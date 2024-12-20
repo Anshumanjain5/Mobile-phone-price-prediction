@@ -39,12 +39,14 @@ def predict():
             df = data.get_data_as_dataframe()
             pipeline = PredictPipeline()
             prediction = pipeline.predict(df)
-            if prediction == 1:
+            if prediction == 0:
                 price_range = "Low"
-            elif prediction == 2:
+            elif prediction == 1:
                 price_range = "Medium"
-            elif prediction == 3:
+            elif prediction == 2:
                 price_range = "High"
+            elif prediction == 3:
+                price_range = "Premium"
             return render_template('prediction.html', price_range=price_range)
 
     except Exception as e:
